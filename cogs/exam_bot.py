@@ -2,6 +2,7 @@ from discord.ext import commands, tasks
 from datetime import datetime, timedelta
 from api.intra import IntraAPIClient
 import sqlite3
+import os
 from config.config import DISCORD_EXAM_CHANNEL
 
 payload_date = {
@@ -15,11 +16,19 @@ class ExamBot(commands.Cog):
         self.bot = bot
         self.start_date = None
         self.end_date = None
-        self.db_connection = sqlite3.connect('databases/exams.db')
+        db_file = 'databases/exams.db'
+        if not os.path.exists(db_file):
+            self.create_database()
+        
+        self.db_connection = sqlite3.connect(db_file)
         self.db_cursor = self.db_connection.cursor()
-        self.db_cursor.execute('''CREATE TABLE IF NOT EXISTS exams
-                                  (id INTEGER PRIMARY KEY, exam_name TEXT, begin_at TEXT, end_at TEXT)''')
-        self.db_connection.commit()
+
+    def create_database(self):
+        with sqlite3.connect('databases/exams.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute('''CREATE TABLE IF NOT EXISTS exams
+                              (id INTEGER PRIMARY KEY, exam_name TEXT, begin_at TEXT, end_at TEXT)''')
+            conn.commit()
 
     def get_date(self):
         ic = IntraAPIClient(progress_bar=False)
