@@ -1,0 +1,6 @@
+py-cord
+requests
+cryptography
+pyyaml
+tqdm
+pygments
