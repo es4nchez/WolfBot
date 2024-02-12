@@ -1,12 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wolf Bot</title>
-</head>
-<body>
-
 <h1>Wolf Bot</h1>
 
 <p>Welcome to Wolf Bot! This bot provides various functionalities for Discord servers. Follow the steps below to get the bot up and running on your server.</p>
