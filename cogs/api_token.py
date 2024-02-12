@@ -4,6 +4,9 @@ import requests
 from config import config
 
 def get_access_token(login):
+    """
+    Get the token for a user nor update it if expired
+    """
     db_connection = sqlite3.connect('databases/users.db')
     db_cursor = db_connection.cursor()
     db_cursor.execute("SELECT * FROM users WHERE discord_id = ?", (login,))

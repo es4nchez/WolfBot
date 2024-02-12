@@ -8,6 +8,9 @@ from config.config import DISCORD_ME_CHANNEL
 LOG = logging.basicConfig(level=logging.INFO)
 
 async def get_personal_info(login):
+    """
+    Get the data from the 42 api
+    """
     access_token, error = api_token.get_access_token(login)
     if error:
         return error
@@ -20,6 +23,9 @@ async def get_personal_info(login):
 
 
 class InfosButton(discord.ui.View):
+    """
+    View for the button My infos
+    """
     def __init__(self):
         super().__init__(timeout=None)
 
@@ -47,6 +53,9 @@ class InfosButton(discord.ui.View):
 
 
 class MeBot(commands.Cog):
+    """
+    Cog for a command to get personnal info
+    """
     def __init__(self, bot):
         self.bot = bot
         self.members = {}

@@ -12,6 +12,9 @@ payload_date = {
 projects_dict = {}
 
 class ExamBot(commands.Cog):
+    """
+    Cog for a retrieve the next exam, and update the grades in real time
+    """
     def __init__(self, bot):
         self.bot = bot
         self.start_date = None
@@ -31,6 +34,9 @@ class ExamBot(commands.Cog):
             conn.commit()
 
     def get_date(self):
+        """
+        Get the dates for the upcoming exams
+        """
         ic = IntraAPIClient(progress_bar=False)
         results = ic.pages_threaded("campus/47/exams", params=payload_date)
         for exam in results:
@@ -48,6 +54,9 @@ class ExamBot(commands.Cog):
         return
 
     def get_exams_grades(self):
+        """
+        Get the grades in real time
+        """
         ic = IntraAPIClient(progress_bar=False)
         results = {}
         start_date_iso = self.start_date.strftime('%Y-%m-%dT%H:%M:%S.000Z')
@@ -68,12 +77,14 @@ class ExamBot(commands.Cog):
 
 
     def check_date(self):
+        """
+        Set start_date and end_date to the next exam dates
+        """
         conn = sqlite3.connect('databases/exams.db')
         cursor = conn.cursor()
         now = datetime.now()
         cursor.execute("SELECT * FROM exams WHERE begin_at >= ? ORDER BY begin_at ASC", (now,))
         exams = cursor.fetchall()
-        
         cursor.close()
         conn.close()
 
@@ -85,10 +96,16 @@ class ExamBot(commands.Cog):
 
     @tasks.loop(seconds=3600.0)
     async def exam_date_update(self):
+        """
+        Loop to update the exam's dates
+        """
         self.get_date()
 
     @tasks.loop(seconds=20.0)
     async def exam_info_update(self, message):
+        """
+        Main loop for update the grades
+        """
         self.check_date()
         if self.start_date > datetime.now() < self.end_date:
             real_start = (self.start_date + timedelta(hours=1, minutes=1)).strftime('%s')
@@ -116,6 +133,9 @@ class ExamBot(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
+        """
+        Start the cog, clean the channel and get the first dates
+        """
         exam_channel = self.bot.get_channel(int(DISCORD_EXAM_CHANNEL))
         await exam_channel.purge()
         initial_message = await exam_channel.send("Initializing... ")

@@ -34,6 +34,10 @@ def add_user(username, user_data):
 
 
 class Webserver(commands.Cog):
+    """
+    Cogs that act like a Webserver and listen for the 42 intra callback, 
+    for link the discord account to the 42 account.
+    """
     def __init__(self, bot):
         self.bot = bot
         self.key = Fernet.generate_key()
@@ -94,6 +98,9 @@ class Webserver(commands.Cog):
     
 
     async def setup(self):
+        """
+        Setup the server and listen
+        """
         app = web.Application()
         app.router.add_get('/callback', self.callback)
         app.router.add_get('/link-intra', self.linking)

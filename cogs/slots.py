@@ -48,6 +48,9 @@ async def delete_slot(login, id):
 
 
 class RemoveButton(discord.ui.Button):
+    """
+    Button to remove the selected slots
+    """
     def __init__(self, number, slot, slots_view):
         super().__init__(label=f"X {number}", style=discord.ButtonStyle.danger)
         self.number = number
@@ -76,6 +79,11 @@ class SlotsButton(discord.ui.View):
 
     @discord.ui.button(label="Update my slots", style=discord.ButtonStyle.primary)
     async def button_callback(self, button, interaction):
+        """
+        Function to be called when the button is clicked
+
+        TO DO: Get data about taken slots, like the project, login, etc...
+        """
         logging.info(f"{interaction.user.name} button update slots")
         self.clear_items()
         user = interaction.user
@@ -130,11 +138,17 @@ class SlotsButton(discord.ui.View):
 
 
 class SlotsBot(commands.Cog):
+    """
+    Cogs to get the futures slots when the button is clicked
+    """
     def __init__(self, bot):
         self.bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
+        """
+        Purge the channel and start the bot
+        """
         me_channel = self.bot.get_channel(int(DISCORD_SLOTS_CHANNEL))
         await me_channel.purge()
         message = await me_channel.send("", view=SlotsButton())

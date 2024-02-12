@@ -10,7 +10,7 @@ LOG = logging.basicConfig(level=logging.INFO)
 
 class SearchLogin(commands.Cog):
     """
-    Add a commande to search a login in the intra42
+    Cog for a command to search a login in the intra42
     """
     def __init__(self, bot):
         self.bot = bot
